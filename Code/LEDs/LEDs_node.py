@@ -4,6 +4,8 @@ import os
 import rospy
 from duckietown import DTROS
 from std_msgs.msg import String
+from duckietown_msgs.msg import LEDPattern
+from duckietown_msgs.srv import SetCustomLEDPattern, ChangePattern
 
 class LEDs(DTROS):
 
@@ -34,7 +36,7 @@ class LEDs(DTROS):
             colour_list = ['yellow', 'switchedoff', 'switchedoff', 'switchedoff', 'white']
             colour_mask = [1, 1, 1, 1, 1]
             freq_mask = [1, 0, 0, 0, 0] #Only front left light blinks
-        elif data.data = 'end': #Red LEDs on read when at end
+        elif data.data = 'end': #Red LEDs on rear when at end
             colour_list = ['white', 'red', 'switchedoff', 'red', 'white']
             colour_mask = [1, 1, 1, 1, 1]
 
