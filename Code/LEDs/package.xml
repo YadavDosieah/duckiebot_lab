@@ -1,0 +1,10 @@
+<package>
+	<name>LEDs</name>
+	<version>1.0</version>
+	<description>
+	Interface between driving node and LED driver.
+	</description>
+	<maintainer email="jhb019@gmail.com">Jamie Berlofsky</maintainer>
+	
+	<buildtool_depend>catkin</buildtool_depend>
+</package>
