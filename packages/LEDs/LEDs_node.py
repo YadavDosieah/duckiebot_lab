@@ -15,7 +15,7 @@ class LEDs(DTROS):
         super(LEDs, self).__init__(node_name=node_name)
 
         # construct subscriber
-        self.sub = rospy.Subscriber('TestTopic', String, self.callback)
+        self.sub = rospy.Subscriber('LEDs', String, self.callback)
 
 
 

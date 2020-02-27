@@ -7,4 +7,5 @@ set -e
 #echo "This is an empty launch script. Update it to launch your application."
 roscore &
 sleep 5
-rosrun LEDs LEDs_node.py
+rosrun LEDs LEDs_node.py &
+rosrun Driver Driver.py 
