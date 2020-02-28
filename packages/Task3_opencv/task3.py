@@ -19,8 +19,7 @@ yellow_detected =False
 #Red
 lower_red=np.array([160,150,0])
 upper_red=np.array([200,255,255])
-red_area = 400
-red_detected = False
+red_area = 600
 
 
 #Identifying the camera and opening it
@@ -38,18 +37,14 @@ while(True):
     #detect Red Color
     mask=cv2.inRange(hsv_image,lower_red,upper_red)
     res=cv2.bitwise_and(frame,frame,mask=mask)
-    median_value=cv2.medianBlur(res,15)
-    edges=cv2.Canny(median_value,100,200)
-    contours, hierarchy = cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2:]
+
     for plc,contour in enumerate(contours):
         area=cv2.contourArea(contour)
         if area>red_area:
-            red_detected = True
-    if red_detected:
-        print('Red color is present in the image')
-        red_detected=False
-    else:
-        print('no Red in the image')
+            print('Red color is present in the image')
+        else:
+            None
 
     #detect yellow color
     yellow = cv2.inRange(hsv_image, y_min, y_max)
@@ -69,6 +64,6 @@ while(True):
         print('Yellow is present')
         yellow_detected=False
     else:
-        print('No yellow in the image')
+        None
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
