@@ -15,15 +15,15 @@ class Driver(DTROS):
         super(Driver, self).__init__(node_name=node_name)
 
         # construct publisher
-        self.pub = rospy.Publisher('/duckiebotX/wheels_driver_node/wheels_cmd', WheelsCmdStamped, queue_size=1)
+        self.pub = rospy.Publisher('/duckiebot3/wheels_driver_node/wheels_cmd', WheelsCmdStamped, queue_size=1)
         self.pub2 = rospy.Publisher('LEDs', String, queue_size=1)
 
         # construct subscriber
         self.sub = rospy.Subscriber('Driver', String, self.callback)
 
         self.Speed = 0.5 #Speed at which duckiebot moves
-        self.ForwardTime = 5.0 #Time for which duckiebot moves forward
-        self.TurnTime = 2.0 #Time for which duckiebot rotates
+        self.ForwardTime = 1.2 #Time for which duckiebot moves forward
+        self.TurnTime =  0.65#Time for which duckiebot rotates
 
 
     def run(self):

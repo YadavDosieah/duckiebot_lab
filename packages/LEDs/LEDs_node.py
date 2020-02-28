@@ -44,9 +44,9 @@ class LEDs(DTROS):
             colour_mask = [1, 1, 1, 1, 1]
             print('end')
 
-        rospy.wait_for_service('/duckiebotX/led_emitter_node/set_custom_pattern')
+        rospy.wait_for_service('/duckiebot3/led_emitter_node/set_custom_pattern')
         try:
-            service = rospy.ServiceProxy('/duckiebotX/led_emitter_node/set_custom_pattern', SetCustomLEDPattern)
+            service = rospy.ServiceProxy('/duckiebot3/led_emitter_node/set_custom_pattern', SetCustomLEDPattern)
             msg = LEDPattern()
             msg.color_list = colour_list
             msg.color_mask = colour_mask
