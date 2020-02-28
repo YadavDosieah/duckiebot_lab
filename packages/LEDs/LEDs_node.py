@@ -7,6 +7,8 @@ from std_msgs.msg import String
 from duckietown_msgs.msg import LEDPattern
 from duckietown_msgs.srv import SetCustomLEDPattern, ChangePattern
 
+prev_colour_list = ['switchedoff', 'switchedoff', 'switchedoff', 'switchedoff', 'switchedoff']
+
 class LEDs(DTROS):
 
     def __init__(self, node_name):
@@ -21,6 +23,7 @@ class LEDs(DTROS):
 
 
     def callback(self, data):
+        global prev_colour_list
         freq = 2.0  #default value for frequency of blinking (in Hz)
         freq_mask = [0,0,0,0,0] #default value for frequency mask
 
@@ -46,8 +49,9 @@ class LEDs(DTROS):
         elif data.data == 'off': #All LEDs off
             colour_list = ['switchedoff', 'switchedoff', 'switchedoff', 'switchedoff', 'switchedoff']
             colour_mask = [1, 1, 1, 1, 1]
+            prev_colour_list = colour_list
         elif data.data == 'red line' or data.data == 'yellow line': #Red line or yellow line detected in front of duckiebot (demo 3)
-            colour_list = ['switchedoff', 'switchedoff', 'switchedoff', 'switchedoff', 'switchedoff']
+            colour_list = prev_colour_list
             colour_mask = [1, 1, 1, 1, 1]
             if data.data == 'red line': #Rear LEDs red if red line detected
                 colour_list[1] = 'red'
@@ -55,6 +59,7 @@ class LEDs(DTROS):
             if data.data == 'yellow line': #Front LEDs yellow if yellow line detected
                 colour_list[0] = 'yellow'
                 colour_list[4] = 'yellow'
+            prev_colour_list = colour_list
             
                 
 
