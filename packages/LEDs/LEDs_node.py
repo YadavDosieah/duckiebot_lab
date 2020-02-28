@@ -43,6 +43,20 @@ class LEDs(DTROS):
             colour_list = ['white', 'red', 'switchedoff', 'red', 'white']
             colour_mask = [1, 1, 1, 1, 1]
             print('end')
+        elif data.data == 'off': #All LEDs off
+            colour_list = ['switchedoff', 'switchedoff', 'switchedoff', 'switchedoff', 'switchedoff']
+            colour_mask = [1, 1, 1, 1, 1]
+        elif data.data == 'red line' or data.data == 'yellow line': #Red line or yellow line detected in front of duckiebot (demo 3)
+            colour_list = ['switchedoff', 'switchedoff', 'switchedoff', 'switchedoff', 'switchedoff']
+            colour_mask = [1, 1, 1, 1, 1]
+            if data.data == 'red line': #Rear LEDs red if red line detected
+                colour_list[1] = 'red'
+                colour_list[3] = 'red'
+            if data.data == 'yellow line': #Front LEDs yellow if yellow line detected
+                colour_list[0] = 'yellow'
+                colour_list[4] = 'yellow'
+            
+                
 
         rospy.wait_for_service('/duckiebot3/led_emitter_node/set_custom_pattern')
         try:
