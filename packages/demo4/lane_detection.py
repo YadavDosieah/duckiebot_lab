@@ -29,7 +29,8 @@ gray_image = cv2.cvtColor(color_lane,cv2.COLOR_BGR2GRAY)
 gray_gaussian = cv2.GaussianBlur(gray_image,(3,3),0)
 edges = cv2.Canny(gray_gaussian,75,150)
 cv2.imshow('edges',edges)
-lines = cv2.HoughLinesP(edges,1,np.pi/180,10,maxLineGap=50)# finds the lines in the image
+lines = cv2.HoughLinesP(edges,1,np.pi/180,10,maxLineGap=50,minLineLength=65)# finds the lines in the image
+
 
 #clasifies the line as leftlane line or rightlane line
 if lines is not None:
@@ -39,7 +40,6 @@ if lines is not None:
         if(x2-x1!=0):
             slope = (y2-y1)/(x2-x1)
             if slope <=0:
-
                 lx.extend([x1,x2])
                 ly.extend([y1,y2])
             else:
@@ -47,20 +47,19 @@ if lines is not None:
                 ry.extend([y1,y2])
 
 
-
 cv2.imshow('left',gray_image)
 polyleft = np.poly1d(np.polyfit(ly,lx,1))
 polyright = np.poly1d(np.polyfit(ry,rx,1))
 print(polyleft)
 print(polyright)
-lx_start=int(polyleft(max_height))
-lx_end = int(polyleft(min_height))
-rx_start = int(polyright(max_height))
-rx_end = int(polyright(min_height))
+lx_start=int(polyleft(240))
+lx_end = int(polyleft(0))
+rx_start = int(polyright(240))
+rx_end = int(polyright(0))
 
-final_lines = [[[lx_start,int(max_height),lx_end,int(min_height)],[rx_start,int(max_height),rx_end,int(min_height)]]]
+final_lines = [[[lx_start,240,lx_end,0]],[[rx_start,240,rx_end,0]]]
 for lines in final_lines:
-    for x1,y1,x2,y2 in line:
+    for x1, y1, x2, y2 in lines:
         cv2.line(croped_frame,(x1,y1),(x2,y2),[255,0,0],3)
 cv2.imshow('lines',color_lane)
 cv2.imshow('final slopes',croped_frame)
