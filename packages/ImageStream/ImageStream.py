@@ -9,6 +9,7 @@ import cv2
 import numpy as np
 from cv_bridge import CvBridge
 
+global frame
 frame = None
 
 class ImageStream(DTROS):
