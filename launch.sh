@@ -8,5 +8,5 @@ set -e
 roscore &
 sleep 5
 rosrun ImageStream ImageStream.py &
-rosrun Demo3 task3.py &
+rosrun Demo3 demo3.py &
 rosrun LEDs LEDs_node.py
