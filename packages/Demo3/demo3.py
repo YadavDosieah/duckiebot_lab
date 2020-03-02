@@ -241,7 +241,6 @@ def on_high_yel_V_thresh_trackbar(val):
 
 
 if __name__ == '__main__':
-    global res
     # create the node
     node = imageProcessing(node_name='Demo3')
     # keep spinning
