@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from time import sleep
+from time
 
 #defining the color range
 lower_red=np.array([160,150,0],np.uint8)
@@ -43,9 +43,11 @@ while(True):
             red_detected =True;
         cv2.rectangle(frame, (x, y), (x + w, y + h), (36,255,12), 2)
     cv2.imshow('red',red)# Shows the frame
-
+    
     if red_detected:
         print('Red is present')
+        t0 = time.time()
+        t1 = time.time()
         number_of_laps=number_of_laps+1
         sleep(5)
     else:
