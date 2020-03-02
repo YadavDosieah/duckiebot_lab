@@ -6,11 +6,9 @@ from duckietown import DTROS
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from sensor_msgs.msg import CompressedImage
-<<<<<<< HEAD
 from cv_bridge import CvBridge
-=======
 from duckietown_msgs.msg import WheelsCmdStamped, BoolStamped
->>>>>>> ef3f6c1aa582383cbd97995fe16558e7a213601e
+
 
 import numpy as np
 import cv2
@@ -129,71 +127,26 @@ class laneDetection(DTROS):
             avr_xmax = int((lx_end+rx_end)/2)
             cv2.line(croped_frame,(avr_xmin,max_height),(avr_xmax,0),[0,0,255],3)
 
-<<<<<<< HEAD
+        final = np.concatenate((croped_frame, clrfilter), axis=0)
+        self.image_pub.publish(self.bridge.cv2_to_imgmsg(final, "bgr8"))
+
+        if(avr_xmin-avr_xmax!=0):
             Trajectory_slope = (0-240)/(avr_xmin - avr_xmax) # final slope that can be used to control the vehicle dynamics
             print(Trajectory_slope)
+            angle = math.atan(Trajectory_slope)
+            angle = math.degrees(angle)
 
-        #if(final is None):
-            #cv2.namedWindow("outputWindow", cv2.WINDOW_NORMAL);
-            #cv2.createTrackbar('Low White Hue', "outputWindow",            low_whi_H, 255, on_low_whi_H_thresh_trackbar)
-            #cv2.createTrackbar('High White Hue', "outputWindow",          high_whi_H, 255, on_high_whi_H_thresh_trackbar)
-            #cv2.createTrackbar('Low White Saturation', "outputWindow",     low_whi_S, 255, on_low_whi_S_thresh_trackbar)
-            #cv2.createTrackbar('High White Saturation', "outputWindow",   high_whi_S, 255, on_high_whi_S_thresh_trackbar)
-            #cv2.createTrackbar('Low White Value', "outputWindow",          low_whi_V, 255, on_low_whi_V_thresh_trackbar)
-            #cv2.createTrackbar('High White Value', "outputWindow",        high_whi_V, 255, on_high_whi_V_thresh_trackbar)
-
-            #cv2.createTrackbar('Low Yellow Hue', "outputWindow",         low_yel_H, 360//2, on_low_yel_H_thresh_trackbar)
-            #cv2.createTrackbar('High Yellow Hue', "outputWindow",       high_yel_H, 360//2, on_high_yel_H_thresh_trackbar)
-            #cv2.createTrackbar('Low Yellow Saturation', "outputWindow",  low_yel_S, 255, on_low_yel_S_thresh_trackbar)
-            #cv2.createTrackbar('High Yellow Saturation', "outputWindow",high_yel_S, 255, on_high_yel_S_thresh_trackbar)
-            #cv2.createTrackbar('Low Yellow Value', "outputWindow",       low_yel_V, 255, on_low_yel_V_thresh_trackbar)
-            #cv2.createTrackbar('High Yellow Value', "outputWindow",     high_yel_V, 255, on_high_yel_V_thresh_trackbar)
-
-        final = np.concatenate((croped_frame, clrfilter), axis=0)
-        #cv_image = self.bridge.cv2_to_imgmsg(final, "bgr8")
-        self.image_pub.publish(self.bridge.cv2_to_imgmsg(final, "bgr8"))
-        # cv2.imshow('final slopes',final)
-        # if cv2.waitKey(1) & 0xFF == ord('q'):
-        #     cv2.destroyAllWindows()
-=======
-
-            if(avr_xmin-avr_xmax!=0):
-                Trajectory_slope = (0-240)/(avr_xmin - avr_xmax) # final slope that can be used to control the vehicle dynamics
-                print(Trajectory_slope)
-                angle = math.atan(Trajectory_slope)
-                angle = math.degrees(angle)
-
-                if angle < 0:
-                    angle = -90 - angle
-                else:
-                    angle = 90-angle
+            if angle < 0:
+                angle = -90 - angle
             else:
-                angle =0
+                angle = 90-angle
+        else:
+            angle =0
 
-            #move(angle)
+
+        #move(angle)
+        print(angle)
                 
-            
-            
-##        if(final is None):
-##            cv2.namedWindow("outputWindow", cv2.WINDOW_NORMAL);
-##            cv2.createTrackbar('Low White Hue', "outputWindow",            low_whi_H, 255, on_low_whi_H_thresh_trackbar)
-##            cv2.createTrackbar('High White Hue', "outputWindow",          high_whi_H, 255, on_high_whi_H_thresh_trackbar)
-##            cv2.createTrackbar('Low White Saturation', "outputWindow",     low_whi_S, 255, on_low_whi_S_thresh_trackbar)
-##            cv2.createTrackbar('High White Saturation', "outputWindow",   high_whi_S, 255, on_high_whi_S_thresh_trackbar)
-##            cv2.createTrackbar('Low White Value', "outputWindow",          low_whi_V, 255, on_low_whi_V_thresh_trackbar)
-##            cv2.createTrackbar('High White Value', "outputWindow",        high_whi_V, 255, on_high_whi_V_thresh_trackbar)
-##
-##            cv2.createTrackbar('Low Yellow Hue', "outputWindow",         low_yel_H, 360//2, on_low_yel_H_thresh_trackbar)
-##            cv2.createTrackbar('High Yellow Hue', "outputWindow",       high_yel_H, 360//2, on_high_yel_H_thresh_trackbar)
-##            cv2.createTrackbar('Low Yellow Saturation', "outputWindow",  low_yel_S, 255, on_low_yel_S_thresh_trackbar)
-##            cv2.createTrackbar('High Yellow Saturation', "outputWindow",high_yel_S, 255, on_high_yel_S_thresh_trackbar)
-##            cv2.createTrackbar('Low Yellow Value', "outputWindow",       low_yel_V, 255, on_low_yel_V_thresh_trackbar)
-##            cv2.createTrackbar('High Yellow Value', "outputWindow",     high_yel_V, 255, on_high_yel_V_thresh_trackbar)
-##
-##        final = np.concatenate((croped_frame, clrfilter), axis=0)
-##        cv2.imshow('final slopes',final)
-##        if cv2.waitKey(1) & 0xFF == ord('q'):
-##            cv2.destroyAllWindows()
 
 
 def move(self, angle):
@@ -212,8 +165,6 @@ def move(self, angle):
 
 
     self.pub.publish(msg)
-
->>>>>>> ef3f6c1aa582383cbd97995fe16558e7a213601e
 
 
 def on_low_whi_H_thresh_trackbar(val):
