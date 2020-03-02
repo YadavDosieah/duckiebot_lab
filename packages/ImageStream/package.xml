@@ -1,0 +1,11 @@
+<package>
+	<name>ImageStream</name>
+	<version>0.1.0</version>
+	<description>
+	Code to stream camera on the image topic for testing
+	</description>
+	<maintainer email="dosyad12@gmail.com">Yadav Dosieah</maintainer>
+	<license>None</license>
+
+	<buildtool_depend>catkin</buildtool_depend>
+</package>

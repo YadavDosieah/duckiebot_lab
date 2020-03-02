@@ -24,7 +24,7 @@ class LEDs(DTROS):
 
     def callback(self, data):
         global prev_colour_list
-        freq = 2.0  #default value for frequency of blinking (in Hz)
+        freq = 10.0  #default value for frequency of blinking (in Hz)
         freq_mask = [0,0,0,0,0] #default value for frequency mask
 
         #Changes LEDs depending on message from publisher
@@ -50,16 +50,20 @@ class LEDs(DTROS):
             colour_list = ['switchedoff', 'switchedoff', 'switchedoff', 'switchedoff', 'switchedoff']
             colour_mask = [1, 1, 1, 1, 1]
             prev_colour_list = colour_list
+            print("off")
         elif data.data == 'red line' or data.data == 'yellow line': #Red line or yellow line detected in front of duckiebot (demo 3)
             colour_list = prev_colour_list
             colour_mask = [1, 1, 1, 1, 1]
             if data.data == 'red line': #Rear LEDs red if red line detected
                 colour_list[1] = 'red'
                 colour_list[3] = 'red'
+                print("red")
             if data.data == 'yellow line': #Front LEDs yellow if yellow line detected
                 colour_list[0] = 'yellow'
                 colour_list[4] = 'yellow'
+                print("yellow")
             prev_colour_list = colour_list
+            print colour_list
             
                 
 

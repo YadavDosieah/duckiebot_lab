@@ -1,0 +1,11 @@
+<package>
+	<name>Demo3</name>
+	<version>0.1.0</version>
+	<description>
+	Detection of red and yellow lines
+	</description>
+	<maintainer email="rsharma10@sheffield.ac.uk">Ronak Sharma</maintainer>
+	<license>None</license>
+
+	<buildtool_depend>catkin</buildtool_depend>
+</package>
