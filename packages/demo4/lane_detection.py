@@ -9,7 +9,7 @@ from sensor_msgs.msg import CompressedImage
 from cv_bridge import CvBridge
 from duckietown_msgs.msg import WheelsCmdStamped, BoolStamped
 
-
+import math
 import numpy as np
 import cv2
 
@@ -64,7 +64,7 @@ class laneDetection(DTROS):
         ly=[]
         rx=[]
         ry=[]
-        
+        maxangle=0
         y_min = np.array([22,60,200],np.uint8)
         y_max = np.array([60,255,255],np.uint8)
         lower_white = np.array([230,220,210])
@@ -99,7 +99,7 @@ class laneDetection(DTROS):
         if lines is not None:
             for line in lines:
                 x1, y1, x2, y2 = line[0]
-                cv2.line(color_lane, (x1, y1), (x2, y2), (255, 0, 0), 2)
+                cv2.line(color_lane, (int(x1), int(y1)), (int(x2), int(y2)), (255, 0, 0), 2)
                 if(x2-x1!=0):
                     slope = (y2-y1)/(x2-x1)
                     if slope <=0:
@@ -120,51 +120,59 @@ class laneDetection(DTROS):
             final_lines = [[[lx_start,max_height,lx_end,0]],[[rx_start,max_height,rx_end,0]]]
             for lines in final_lines:
                 for x1, y1, x2, y2 in lines:
-                    cv2.line(croped_frame,(x1,y1),(x2,y2),[255,0,0],3)
+                    cv2.line(croped_frame,(int(x1),int(y1)),(int(x2),int(y2)),[255,0,0],3)
 
             #these two variables provides slopes of leftlane and right lane
             avr_xmin = int((lx_start+rx_start)/2)
             avr_xmax = int((lx_end+rx_end)/2)
-            cv2.line(croped_frame,(avr_xmin,max_height),(avr_xmax,0),[0,0,255],3)
+            cv2.line(croped_frame,(int(avr_xmin),int(max_height)),(int(avr_xmax),0),[0,0,255],3)
 
+
+
+            if(avr_xmin-avr_xmax!=0):
+                Trajectory_slope = (0-240)/(avr_xmin - avr_xmax) # final slope that can be used to control the vehicle dynamics
+                angle = math.atan(Trajectory_slope)
+                angle = math.degrees(angle)
+
+                if angle < 0:
+                    angle = -90 - angle
+                else:
+                    angle = 90-angle
+            else:
+                angle =0
+	  
+            if(abs(angle)>maxangle):
+	        maxangle=abs(angle)
+                print(maxangle)
+            self.move(angle)
+            
+                
         final = np.concatenate((croped_frame, clrfilter), axis=0)
         self.image_pub.publish(self.bridge.cv2_to_imgmsg(final, "bgr8"))
+    def onShutdown(self):
+        msg = WheelsCmdStamped()
+        msg.header.stamp = rospy.get_rostime()
+        msg.vel_left = 0
+        msg.vel_right = 0
+        self.motor_pub.publish(msg)
+        super(laneDetection,self).onShutdown()
 
-        if(avr_xmin-avr_xmax!=0):
-            Trajectory_slope = (0-240)/(avr_xmin - avr_xmax) # final slope that can be used to control the vehicle dynamics
-            print(Trajectory_slope)
-            angle = math.atan(Trajectory_slope)
-            angle = math.degrees(angle)
+    def move(self, angle):
 
-            if angle < 0:
-                angle = -90 - angle
-            else:
-                angle = 90-angle
+        msg = WheelsCmdStamped()
+        msg.header.stamp = rospy.get_rostime()
+
+        if angle >= 0:
+            msg.vel_left = (1-angle/50)*0.2
+            msg.vel_right = 0.2
         else:
-            angle =0
-
-
-        #move(angle)
-        print(angle)
-                
-
-
-def move(self, angle):
-
-    msg = WheelsCmdStamped()
-    msg.header.stamp = rospy.get_rostime()
-
-    if angle >= 0:
-        msg.vel_left = (1-angle/60)*0.5
-        msg.vel_right = 0.5
-    else:
-        msg.vel_left = 0.5
-        msg.vel_right = (1-abs(angle)/60)*0.5
+            msg.vel_left = 0.2
+            msg.vel_right = (1-abs(angle)/50)*0.2
     
-    #Move Forward for x seconds (defined by ForwardTime)
+        #Move Forward for x seconds (defined by ForwardTime)
 
 
-    self.pub.publish(msg)
+        self.motor_pub.publish(msg)
 
 
 def on_low_whi_H_thresh_trackbar(val):
