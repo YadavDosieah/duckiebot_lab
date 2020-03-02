@@ -48,6 +48,7 @@ while(True):
         print('Red is present')
         t0 = time.time()
         t1 = time.time()
+        if()
         number_of_laps=number_of_laps+1
         sleep(5)
     else:
