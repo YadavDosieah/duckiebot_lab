@@ -9,10 +9,10 @@ from sensor_msgs.msg import CompressedImage
 import numpy as np
 import cv2
 
-low_whi_H = 160
+low_whi_H = 220
 low_whi_S = 220
 low_whi_V = 210
-high_whi_H = 180
+high_whi_H = 255
 high_whi_S = 255
 high_whi_V = 255
 
@@ -92,7 +92,7 @@ class laneDetection(DTROS):
                     else:
                         rx.extend([x1,x2])
                         ry.extend([y1,y2])
-        if((ly or lx or ry or rx)!= []):
+        if((ly and lx and ry and rx)!= []):
             polyleft = np.poly1d(np.polyfit(ly,lx,1))
             polyright = np.poly1d(np.polyfit(ry,rx,1))
 
@@ -116,8 +116,8 @@ class laneDetection(DTROS):
 
         if(final is None):
             cv2.namedWindow("outputWindow", cv2.WINDOW_NORMAL);
-            cv2.createTrackbar('Low White Hue', "outputWindow",            low_whi_H, 360//2, on_low_whi_H_thresh_trackbar)
-            cv2.createTrackbar('High White Hue', "outputWindow",          high_whi_H, 360//2, on_high_whi_H_thresh_trackbar)
+            cv2.createTrackbar('Low White Hue', "outputWindow",            low_whi_H, 255, on_low_whi_H_thresh_trackbar)
+            cv2.createTrackbar('High White Hue', "outputWindow",          high_whi_H, 255, on_high_whi_H_thresh_trackbar)
             cv2.createTrackbar('Low White Saturation', "outputWindow",     low_whi_S, 255, on_low_whi_S_thresh_trackbar)
             cv2.createTrackbar('High White Saturation', "outputWindow",   high_whi_S, 255, on_high_whi_S_thresh_trackbar)
             cv2.createTrackbar('Low White Value', "outputWindow",          low_whi_V, 255, on_low_whi_V_thresh_trackbar)
