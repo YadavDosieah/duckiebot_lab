@@ -120,28 +120,28 @@ class imageProcessing(DTROS):
         if(not (Red_Flag or Yellow_Flag)):
             self.led_pub.publish('off')
 
-        if(res is None):
-            cv2.namedWindow("outputWindow", cv2.WINDOW_NORMAL);
-            cv2.createTrackbar('Low Red Hue', "outputWindow",            low_red_H, 360//2, on_low_red_H_thresh_trackbar)
-            cv2.createTrackbar('High Red Hue', "outputWindow",          high_red_H, 360//2, on_high_red_H_thresh_trackbar)
-            cv2.createTrackbar('Low Red Saturation', "outputWindow",     low_red_S, 255, on_low_red_S_thresh_trackbar)
-            cv2.createTrackbar('High Red Saturation', "outputWindow",   high_red_S, 255, on_high_red_S_thresh_trackbar)
-            cv2.createTrackbar('Low Red Value', "outputWindow",          low_red_V, 255, on_low_red_V_thresh_trackbar)
-            cv2.createTrackbar('High Red Value', "outputWindow",        high_red_V, 255, on_high_red_V_thresh_trackbar)
+        #if(res is None):
+            #cv2.namedWindow("outputWindow", cv2.WINDOW_NORMAL);
+            #cv2.createTrackbar('Low Red Hue', "outputWindow",            low_red_H, 360//2, on_low_red_H_thresh_trackbar)
+            #cv2.createTrackbar('High Red Hue', "outputWindow",          high_red_H, 360//2, on_high_red_H_thresh_trackbar)
+            #cv2.createTrackbar('Low Red Saturation', "outputWindow",     low_red_S, 255, on_low_red_S_thresh_trackbar)
+            #cv2.createTrackbar('High Red Saturation', "outputWindow",   high_red_S, 255, on_high_red_S_thresh_trackbar)
+            #cv2.createTrackbar('Low Red Value', "outputWindow",          low_red_V, 255, on_low_red_V_thresh_trackbar)
+            #cv2.createTrackbar('High Red Value', "outputWindow",        high_red_V, 255, on_high_red_V_thresh_trackbar)
 
-            cv2.createTrackbar('Low Yellow Hue', "outputWindow",         low_yel_H, 360//2, on_low_yel_H_thresh_trackbar)
-            cv2.createTrackbar('High Yellow Hue', "outputWindow",       high_yel_H, 360//2, on_high_yel_H_thresh_trackbar)
-            cv2.createTrackbar('Low Yellow Saturation', "outputWindow",  low_yel_S, 255, on_low_yel_S_thresh_trackbar)
-            cv2.createTrackbar('High Yellow Saturation', "outputWindow",high_yel_S, 255, on_high_yel_S_thresh_trackbar)
-            cv2.createTrackbar('Low Yellow Value', "outputWindow",       low_yel_V, 255, on_low_yel_V_thresh_trackbar)
-            cv2.createTrackbar('High Yellow Value', "outputWindow",     high_yel_V, 255, on_high_yel_V_thresh_trackbar)
+            #cv2.createTrackbar('Low Yellow Hue', "outputWindow",         low_yel_H, 360//2, on_low_yel_H_thresh_trackbar)
+            #cv2.createTrackbar('High Yellow Hue', "outputWindow",       high_yel_H, 360//2, on_high_yel_H_thresh_trackbar)
+            #cv2.createTrackbar('Low Yellow Saturation', "outputWindow",  low_yel_S, 255, on_low_yel_S_thresh_trackbar)
+            #cv2.createTrackbar('High Yellow Saturation', "outputWindow",high_yel_S, 255, on_high_yel_S_thresh_trackbar)
+            #cv2.createTrackbar('Low Yellow Value', "outputWindow",       low_yel_V, 255, on_low_yel_V_thresh_trackbar)
+            #cv2.createTrackbar('High Yellow Value', "outputWindow",     high_yel_V, 255, on_high_yel_V_thresh_trackbar)
         # mask = yellowmask + redmask
-        red=cv2.bitwise_and(frame,frame,mask=redmask)
-        yellow=cv2.bitwise_and(frame,frame,mask=yellowmask)
-        res = np.concatenate((red, yellow), axis=1)
-        cv2.imshow('ProcessedImage',res)# Shows the frame
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            cv2.destroyAllWindows()
+        #red=cv2.bitwise_and(frame,frame,mask=redmask)
+        #yellow=cv2.bitwise_and(frame,frame,mask=yellowmask)
+        #res = np.concatenate((red, yellow), axis=1)
+        #cv2.imshow('ProcessedImage',res)# Shows the frame
+        #if cv2.waitKey(1) & 0xFF == ord('q'):
+            #cv2.destroyAllWindows()
 
 
 def on_low_red_H_thresh_trackbar(val):

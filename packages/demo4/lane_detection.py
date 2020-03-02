@@ -4,7 +4,9 @@ import os
 import rospy
 from duckietown import DTROS
 from std_msgs.msg import String
+from sensor_msgs.msg import Image
 from sensor_msgs.msg import CompressedImage
+from cv_bridge import CvBridge
 
 import numpy as np
 import cv2
@@ -35,6 +37,10 @@ class laneDetection(DTROS):
         name="/duckiebot3/camera_node/image/compressed"
         message_type=CompressedImage
         self.sub = self.subscriber(name,message_type,self.onImageReceived)
+        self.bridge = CvBridge()
+
+	self.image_pub = rospy.Publisher("image_topic",Image, queue_size=1)
+
 
     def onImageReceived(self,image):
         global final
@@ -114,26 +120,28 @@ class laneDetection(DTROS):
             Trajectory_slope = (0-240)/(avr_xmin - avr_xmax) # final slope that can be used to control the vehicle dynamics
             print(Trajectory_slope)
 
-        if(final is None):
-            cv2.namedWindow("outputWindow", cv2.WINDOW_NORMAL);
-            cv2.createTrackbar('Low White Hue', "outputWindow",            low_whi_H, 255, on_low_whi_H_thresh_trackbar)
-            cv2.createTrackbar('High White Hue', "outputWindow",          high_whi_H, 255, on_high_whi_H_thresh_trackbar)
-            cv2.createTrackbar('Low White Saturation', "outputWindow",     low_whi_S, 255, on_low_whi_S_thresh_trackbar)
-            cv2.createTrackbar('High White Saturation', "outputWindow",   high_whi_S, 255, on_high_whi_S_thresh_trackbar)
-            cv2.createTrackbar('Low White Value', "outputWindow",          low_whi_V, 255, on_low_whi_V_thresh_trackbar)
-            cv2.createTrackbar('High White Value', "outputWindow",        high_whi_V, 255, on_high_whi_V_thresh_trackbar)
+        #if(final is None):
+            #cv2.namedWindow("outputWindow", cv2.WINDOW_NORMAL);
+            #cv2.createTrackbar('Low White Hue', "outputWindow",            low_whi_H, 255, on_low_whi_H_thresh_trackbar)
+            #cv2.createTrackbar('High White Hue', "outputWindow",          high_whi_H, 255, on_high_whi_H_thresh_trackbar)
+            #cv2.createTrackbar('Low White Saturation', "outputWindow",     low_whi_S, 255, on_low_whi_S_thresh_trackbar)
+            #cv2.createTrackbar('High White Saturation', "outputWindow",   high_whi_S, 255, on_high_whi_S_thresh_trackbar)
+            #cv2.createTrackbar('Low White Value', "outputWindow",          low_whi_V, 255, on_low_whi_V_thresh_trackbar)
+            #cv2.createTrackbar('High White Value', "outputWindow",        high_whi_V, 255, on_high_whi_V_thresh_trackbar)
 
-            cv2.createTrackbar('Low Yellow Hue', "outputWindow",         low_yel_H, 360//2, on_low_yel_H_thresh_trackbar)
-            cv2.createTrackbar('High Yellow Hue', "outputWindow",       high_yel_H, 360//2, on_high_yel_H_thresh_trackbar)
-            cv2.createTrackbar('Low Yellow Saturation', "outputWindow",  low_yel_S, 255, on_low_yel_S_thresh_trackbar)
-            cv2.createTrackbar('High Yellow Saturation', "outputWindow",high_yel_S, 255, on_high_yel_S_thresh_trackbar)
-            cv2.createTrackbar('Low Yellow Value', "outputWindow",       low_yel_V, 255, on_low_yel_V_thresh_trackbar)
-            cv2.createTrackbar('High Yellow Value', "outputWindow",     high_yel_V, 255, on_high_yel_V_thresh_trackbar)
+            #cv2.createTrackbar('Low Yellow Hue', "outputWindow",         low_yel_H, 360//2, on_low_yel_H_thresh_trackbar)
+            #cv2.createTrackbar('High Yellow Hue', "outputWindow",       high_yel_H, 360//2, on_high_yel_H_thresh_trackbar)
+            #cv2.createTrackbar('Low Yellow Saturation', "outputWindow",  low_yel_S, 255, on_low_yel_S_thresh_trackbar)
+            #cv2.createTrackbar('High Yellow Saturation', "outputWindow",high_yel_S, 255, on_high_yel_S_thresh_trackbar)
+            #cv2.createTrackbar('Low Yellow Value', "outputWindow",       low_yel_V, 255, on_low_yel_V_thresh_trackbar)
+            #cv2.createTrackbar('High Yellow Value', "outputWindow",     high_yel_V, 255, on_high_yel_V_thresh_trackbar)
 
         final = np.concatenate((croped_frame, clrfilter), axis=0)
-        cv2.imshow('final slopes',final)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            cv2.destroyAllWindows()
+        #cv_image = self.bridge.cv2_to_imgmsg(final, "bgr8")
+        self.image_pub.publish(self.bridge.cv2_to_imgmsg(final, "bgr8"))
+        # cv2.imshow('final slopes',final)
+        # if cv2.waitKey(1) & 0xFF == ord('q'):
+        #     cv2.destroyAllWindows()
 
 
 def on_low_whi_H_thresh_trackbar(val):
