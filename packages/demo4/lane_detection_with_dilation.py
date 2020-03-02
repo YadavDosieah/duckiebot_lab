@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import math
 lx=[]
 ly=[]
 rx=[]
@@ -83,4 +84,6 @@ cv2.imshow('final slopes',croped_frame)
 
 Trajectory_slope = (0-240)/(avr_xmin - avr_xmax) # final slope that can be used to control the vehicle dynamics
 print(Trajectory_slope)
-
+angle = math.atan(Trajectory_slope)
+angle = math.degrees(angle)
+print(angle)
