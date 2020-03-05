@@ -28,18 +28,17 @@ counter=0
 
 while(True):
     # Capture frame-by-frame
+    #      kernel = np.ones((5,5),np.uint8)
+#    redmask = cv2.dilate(red,kernel,iterations = 1)
+#    redmask = cv2.erode(redmask,kernel,iterations =1)
     ret, frame = cap.read()
-    hsv_image = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    #detect yellow color
-    red = cv2.inRange(hsv_image, lower_red, upper_red)
-    
-    kernel = np.ones((5,5),np.uint8)
-    redmask = cv2.dilate(red,kernel,iterations = 1)
-    redmask = cv2.erode(redmask,kernel,iterations =1)
-    clrfilter = cv2.bitwise_and(hsv_image,hsv_image,mask=redmask)
-    
-    contours, hierarchy = cv2.findContours(redmask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2:]
+    hsv=cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
+    mask=cv2.inRange(hsv, lower_red, upper_red)
+    res=cv2.bitwise_and(frame,frame,mask=mask)
+    median_value=cv2.medianBlur(res,15)
+    edges=cv2.Canny(median_value,100,200)
+    canny2, contours, hierarchy = cv2.findContours(edges,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
     for plc,contour in enumerate(contours):
         area=cv2.contourArea(contour)
@@ -47,7 +46,7 @@ while(True):
             red_detected=True
         else:
            red_detected=False
-    cv2.imshow('red',red)# Shows the frame
+    cv2.imshow('red',median_value)# Shows the frame
     
     if red_detected:
         counter=counter+1
