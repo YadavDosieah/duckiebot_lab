@@ -48,6 +48,7 @@ class lapCount(DTROS):
     def run(self):
         while not rospy.is_shutdown():
             number_of_lap = rospy.get_param('~number_of_lap')
+            self.led_pub.publish('{}'.format(number_of_lap))
             if((number_of_lap < 3) and (self.frame is not None)):
                 self.threadLock.acquire()
                 frame = self.frame

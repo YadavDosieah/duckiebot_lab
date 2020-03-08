@@ -63,6 +63,10 @@ class LEDs(DTROS):
                 colour_list[4] = 'yellow'
                 print("yellow")
             prev_colour_list = colour_list
+        elif data.data == '0':
+            colour_list = ['switchedoff', 'switchedoff', 'switchedoff', 'switchedoff', 'switchedoff']
+            colour_mask = [1, 1, 1, 1, 1]
+            print('0 Lap')
         elif data.data == '1':
             colour_list = ['switchedoff', 'red', 'switchedoff', 'swtichedoff', 'switchedoff']
             colour_mask = [1, 1, 1, 1, 1]
@@ -76,8 +80,8 @@ class LEDs(DTROS):
             colour_mask = [1, 1, 1, 1, 1]
             print('3 Laps')
 
-            
-                
+
+
 
         rospy.wait_for_service('/duckiebot3/led_emitter_node/set_custom_pattern')
         try:
