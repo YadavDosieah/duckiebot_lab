@@ -82,9 +82,9 @@ class KinematicsNode(DTROS):
         self.srv_save = rospy.Service("~save_calibration", Empty, self.cbSrvSaveCalibration)
 
         # Setup the publishers and subscribers
-        self.sub_car_cmd = self.subscriber("velocity_angle", Twist2DStamped, self.car_cmd_callback)
+        self.sub_car_cmd = self.subscriber("/duckiebot3/wheels_driver_node/car_cmd", Twist2DStamped, self.car_cmd_callback)
         self.pub_wheels_cmd = self.publisher("/duckiebot3/wheels_driver_node/wheels_cmd", WheelsCmdStamped, queue_size=1)
-        self.pub_velocity = self.publisher("velocity_angle_actual", Twist2DStamped, queue_size=1)
+        self.pub_velocity = self.publisher("/duckiebot3/wheels_driver_node/velocity", Twist2DStamped, queue_size=1)
 
         details = "[gain: %s trim: %s baseline: %s radius: %s k: %s limit: %s omega_max: %s v_max: %s]" % \
                   (self.parameters['~gain'], self.parameters['~trim'], self.parameters['~baseline'],
