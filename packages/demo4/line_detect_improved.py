@@ -43,10 +43,6 @@ def process(frame):
 
     croped_frame = frame[round(height * (1-max_height_percent)):round(height*1), 1:width]
 
-    croped_frame = cv2.cvtColor(croped_frame, cv2.COLOR_BGR2RGB)
-
-
-
     hsv_image = cv2.cvtColor(croped_frame, cv2.COLOR_RGB2HSV)
 
     yellow = cv2.inRange(hsv_image, y_min, y_max)
@@ -90,19 +86,38 @@ def process(frame):
         print('New Max Angle: ', maxangle)
     print('Angle: ', angle)
     move(angle)
-    croped_frame = cv2.cvtColor(croped_frame, cv2.COLOR_BGR2RGB)
     return croped_frame
 
-def move(angle):
+def move_wheel(angle):
     if angle >= 0:
-        vel_left = (1 - angle / 50) * 0.2
+        vel_left = (1 - angle / 25) * 0.2
         vel_right = 0.2
     else:
         vel_left = 0.2
-        vel_right = (1 - abs(angle) / 50) * 0.2
+        vel_right = (1 - abs(angle) / 25) * 0.2
+
+    msg = WheelsCmdStamped()
+    msg.header.stamp = rospy.get_rostime()
+    msg.vel_left = vel_left
+    msg.vel_right = vel_right
+    self.pub.publish(msg)
 
     print('Left: ', vel_left)
     print('Right: ', vel_right)
+
+def move_kin(angle):
+    msg = Twist2DStamped()
+    msg.header.stamp = rospy.get_rostime()
+    msg.v = 0.2
+    msg.omega = angle
+    self.pub2.publish(msg)
+
+def stop():
+    msg = WheelsCmdStamped()
+    msg.header.stamp = rospy.get_rostime()
+    msg.vel_left = 0
+    msg.vel_right = 0
+    self.pub.publish(msg)
 
 
 def hough(img, max_height, colour):
@@ -181,11 +196,11 @@ def hough(img, max_height, colour):
 
     return final_line, start, end
 
-#Uncomment below to run video
-white_output = 'test_videos_output/cutvideo.mp4'
-clip1 = VideoFileClip("test_videos/cutvideo.mp4")
-white_clip = clip1.fl_image(process) #NOTE: this function expects color images!!
-white_clip.write_videofile(white_output, audio=False)
+# #Uncomment below to run video
+# white_output = 'test_videos_output/cutvideo.mp4'
+# clip1 = VideoFileClip("test_videos/cutvideo.mp4")
+# white_clip = clip1.fl_image(process) #NOTE: this function expects color images!!
+# white_clip.write_videofile(white_output, audio=False)
 
 #Uncomment below to run images
 # test_image = cv2.imread('test_images/5fps/0001.jpg')
