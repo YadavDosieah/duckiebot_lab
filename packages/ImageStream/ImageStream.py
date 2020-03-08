@@ -21,6 +21,8 @@ class ImageStream(DTROS):
         # construct publisher
         self.pub = rospy.Publisher('/duckiebot3/camera_node/image/compressed', CompressedImage, queue_size=1)
         self.cam =cv2.VideoCapture(-1)
+        self.cam.set(3,640);
+        self.cam.set(4,480);
         bridge = CvBridge()
         rospy.sleep(2)
 

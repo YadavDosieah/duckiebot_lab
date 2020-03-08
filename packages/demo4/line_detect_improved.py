@@ -21,7 +21,7 @@ class laneDetection(DTROS):
         self.led_pub = rospy.Publisher('LEDs', String, queue_size=1)
         self.wheel_pub = rospy.Publisher('/duckiebot3/wheels_driver_node/wheels_cmd', WheelsCmdStamped, queue_size=1)
         self.car_pub = rospy.Publisher('/duckiebot3/wheels_driver_node/car_cmd', Twist2DStamped, queue_size=1)
-
+        self.line_detection_pub = rospy.Publisher('line_detection', String, queue_size=1)
 
     	# construct publisher
         self.sub = self.subscriber("/duckiebot3/camera_node/image/compressed",CompressedImage,self.onImageReceived)
@@ -57,7 +57,7 @@ class laneDetection(DTROS):
         rospy.set_param('~minLineLength',50)
         rospy.set_param('~threshold',25)
 
-        rospy.set_param('~mode',1)
+        rospy.set_param('mode',1)
 
         rospy.set_param("~max_angle_change",25)
         rospy.set_param("~speed",0.2)
@@ -132,10 +132,10 @@ class laneDetection(DTROS):
 
                 if (abs(angle) > self.maxangle):
                     self.maxangle = abs(angle)
-                    print('New Max Angle: ', self.maxangle)
-                print('Angle: ', angle)
+                    self.line_detection_pub.publish('New Max Angle: {}'.format(self.maxangle))
+                self.line_detection_pub.publish('Angle: {}'.format(angle))
 
-                mode = rospy.get_param("~mode")
+                mode = rospy.get_param("mode")
 
                 if(mode == 1):
                     self.move_kin(angle)
@@ -167,8 +167,8 @@ class laneDetection(DTROS):
         msg.vel_right = vel_right
         self.wheel_pub.publish(msg)
 
-        print('Left: ', vel_left)
-        print('Right: ', vel_right)
+        self.line_detection_pub.publish('Left: {}'.format(vel_left))
+        self.line_detection_pub.publish('Right: {}'.format(vel_right))
 
 
     def move_kin(self,angle):
@@ -246,12 +246,12 @@ class laneDetection(DTROS):
                 self.yellow_start_prev = start
                 self.yellow_end_prev = end
         elif colour == 'white': #If line has not been found use line found in last good frame
-            print('WARNING: PREVIOUS CALC')
+            self.line_detection_pub.publish('WARNING: PREVIOUS CALC')
             final_line = self.white_line_prev
             start = self.white_start_prev
             end = self.white_end_prev
         else:
-            print('WARNING: PREVIOUS CALC')
+            self.line_detection_pub.publish('WARNING: PREVIOUS CALC')
             final_line = self.yellow_line_prev
             start = self.yellow_start_prev
             end = self.yellow_end_prev

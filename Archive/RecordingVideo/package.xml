@@ -1,10 +1,10 @@
 <package>
-	<name>ImageStream</name>
+	<name>recording</name>
 	<version>0.1.0</version>
 	<description>
-	Code to stream camera on the image topic for testing
+	Lane detection
 	</description>
-	<maintainer email="dosyad12@gmail.com">Yadav Dosieah</maintainer>
+	<maintainer email="hkkrishna1@sheffield.ac.uk">Hemanth Krishna</maintainer>
 	<license>None</license>
 
 	<buildtool_depend>catkin</buildtool_depend>
