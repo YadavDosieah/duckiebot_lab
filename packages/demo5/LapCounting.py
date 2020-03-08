@@ -99,9 +99,9 @@ class lapCount(DTROS):
                     print("Mode set to 3")
 
                 self.image_pub.publish(self.bridge.cv2_to_imgmsg(res, "bgr8"))
-                cv2.imshow('media blur',res)
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    cv2.destroyAllWindows()
+                # cv2.imshow('media blur',res)
+                # if cv2.waitKey(1) & 0xFF == ord('q'):
+                #     cv2.destroyAllWindows()
 
                 if(self.counter > 0):
                     print(self.counter,number_of_lap)

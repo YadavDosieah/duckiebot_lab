@@ -11,5 +11,7 @@ rosrun ImageStream ImageStream.py &
 # rosparam set /duckiebot3/camera_node/framerate 5
 # rosrun LEDs LEDs_node.py &
 rosrun demo4 line_detect_improved.py &
-rosrun demo5 LapCounting.py
+sleep 1
+# rosrun demo5 LapCounting.py
+rosrun demo5 StopSign.py
 # rosrun recording recordFile.py
