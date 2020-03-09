@@ -118,7 +118,7 @@ class laneDetection(DTROS):
                 cv2.line(croped_frame, (int(avr_xmin), int(max_height)), (int(avr_xmax), 0), [0, 0, 255], 3)
 
                 if (avr_xmin - avr_xmax != 0):
-                    Trajectory_slope = (0 - 240) / (
+                    Trajectory_slope = (0 - max_height) / (
                             avr_xmin - avr_xmax)  # Final slope that can be used to control the vehicle dynamics
                     angle = math.atan(Trajectory_slope)
                     angle = math.degrees(angle)
@@ -153,8 +153,10 @@ class laneDetection(DTROS):
     def move_wheel(self,angle):
         max_angle_change = rospy.get_param("~max_angle_change")
         speed = rospy.get_param("~speed")
-
-        if angle >= 0:
+        if angle <= 3 and angle >= -3:
+            vel_left = speed
+            vel_right = speed
+        elif angle >= 0:
             vel_left = (1 - angle / max_angle_change) * speed
             vel_right = speed
         else:
@@ -172,6 +174,8 @@ class laneDetection(DTROS):
 
 
     def move_kin(self,angle):
+        if angle <= 3 and angle >= -3:
+            angle = 0
         speed = rospy.get_param("~speed")
         msg = Twist2DStamped()
         msg.header.stamp = rospy.get_rostime()
