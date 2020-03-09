@@ -44,23 +44,25 @@ class laneDetection(DTROS):
         self.white_start_prev = 0
         self.white_end_prev = 0
 
+        self.not_found = 0
+
         rospy.set_param('~y_min', [22, 60, 200])
         rospy.set_param('~y_max', [100, 255, 255])
 
-        rospy.set_param('~lower_white', [230, 220, 210])
-        rospy.set_param('~upper_white', [255, 255, 255])
+        rospy.set_param('~lower_white', [0, 0, 220])
+        rospy.set_param('~upper_white', [180, int(0.15*255), 255])
 
         #Change this value to look at a certain percentage of full image measured from bottom
-        rospy.set_param('~max_height_percent', 0.6)
+        rospy.set_param('~max_height_percent', 0.4)
 
         rospy.set_param('~maxLineGap',50)
         rospy.set_param('~minLineLength',50)
         rospy.set_param('~threshold',25)
 
-        rospy.set_param('mode',1)
+        rospy.set_param('mode',2)
 
-        rospy.set_param("~max_angle_change",25)
-        rospy.set_param("~speed",0.2)
+        rospy.set_param("~max_angle_change",75)
+        rospy.set_param("~speed",0.1)
 
 
     def onShutdown(self):
@@ -96,6 +98,7 @@ class laneDetection(DTROS):
                 hsv_image = cv2.cvtColor(croped_frame, cv2.COLOR_RGB2HSV)
 
 
+
                 yellow = cv2.inRange(hsv_image, y_min, y_max)
                 #Dilate and erode yellow to form one solid object from dashed line
                 kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (35, 35))
@@ -103,7 +106,7 @@ class laneDetection(DTROS):
                 kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (15, 15))
                 yellow_morph = cv2.erode(yellow_morph, kernel, iterations=1)
 
-                white = cv2.inRange(croped_frame, lower_white, upper_white)
+                white = cv2.inRange(hsv_image, lower_white, upper_white)
 
 
                 yellow_line, yellow_start, yellow_end = self.hough(yellow_morph, max_height, 'yellow')   #Identify location of yellow line
@@ -112,12 +115,22 @@ class laneDetection(DTROS):
                 cv2.line(croped_frame, (int(white_start), int(max_height)), (int(white_end), int(0)), [255, 0, 0], 3)
                 cv2.line(croped_frame, (int(yellow_start), int(max_height)), (int(yellow_end), int(0)), [255, 0, 0], 3)
 
-                #Calculate line half way between yellow and white
-                avr_xmin = int((white_start + yellow_start) / 2)
-                avr_xmax = int((white_end + yellow_end) / 2)
-                cv2.line(croped_frame, (int(avr_xmin), int(max_height)), (int(avr_xmax), 0), [0, 0, 255], 3)
+                if self.not_found == 0:
+	            #Calculate line half way between yellow and white
+	            avr_xmin = int((white_start + yellow_start) / 2)
+	            avr_xmax = int((white_end + yellow_end) / 2)
+                elif self.not_found == 1:
+		    avr_xmin = int(yellow_start)
+		    avr_xmax = int(yellow_end)
 
-                if (avr_xmin - avr_xmax != 0):
+		elif self.not_found == 2:
+		    avr_xmin = int(white_start)
+		    avr_xmax = int(white_end)
+
+
+	            cv2.line(croped_frame, (int(avr_xmin), int(max_height)), (int(avr_xmax), 0), [0, 0, 255], 3)
+
+                if (avr_xmin - avr_xmax != 0 ):
                     Trajectory_slope = (0 - max_height) / (
                             avr_xmin - avr_xmax)  # Final slope that can be used to control the vehicle dynamics
                     angle = math.atan(Trajectory_slope)
@@ -153,15 +166,19 @@ class laneDetection(DTROS):
     def move_wheel(self,angle):
         max_angle_change = rospy.get_param("~max_angle_change")
         speed = rospy.get_param("~speed")
-        if angle <= 3 and angle >= -3:
+        if angle <= 10 and angle >= -10:
             vel_left = speed
             vel_right = speed
-        elif angle >= 0:
-            vel_left = (1 - angle / max_angle_change) * speed
+        elif angle <= 0:
+            vel_left = (1 - abs(angle) / max_angle_change) * speed
             vel_right = speed
+            if vel_left < 0:
+            	vel_left = 0
         else:
             vel_left = speed
             vel_right = (1 - abs(angle) / max_angle_change) * speed
+            if vel_right < 0:
+            	vel_right = 0
 
         msg = WheelsCmdStamped()
         msg.header.stamp = rospy.get_rostime()
@@ -249,16 +266,19 @@ class laneDetection(DTROS):
             else:
                 self.yellow_start_prev = start
                 self.yellow_end_prev = end
+            self.not_found = 0
         elif colour == 'white': #If line has not been found use line found in last good frame
-            self.line_detection_pub.publish('WARNING: PREVIOUS CALC')
+            self.line_detection_pub.publish('WARNING: PREVIOUS CALC, WHITE NOT FOUND')
             final_line = self.white_line_prev
             start = self.white_start_prev
             end = self.white_end_prev
+            self.not_found = 1
         else:
-            self.line_detection_pub.publish('WARNING: PREVIOUS CALC')
+            self.line_detection_pub.publish('WARNING: PREVIOUS CALC, YELLOW NOT FOUND')
             final_line = self.yellow_line_prev
             start = self.yellow_start_prev
             end = self.yellow_end_prev
+            self.not_found = 2
 
         return final_line, start, end
 

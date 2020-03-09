@@ -1,0 +1,11 @@
+<package>
+	<name>kinematics_trim</name>
+	<version>0.1.0</version>
+	<description>
+	Used to trim kinematics node.
+	</description>
+	<maintainer email="jhb019@gmail.com">Jamie Berlofsky</maintainer>
+	<license>None</license>
+
+	<buildtool_depend>catkin</buildtool_depend>
+</package>

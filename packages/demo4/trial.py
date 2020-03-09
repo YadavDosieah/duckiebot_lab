@@ -14,6 +14,15 @@ import cv2
 import numpy as np
 
 global res
+<<<<<<< HEAD
+global low_red_H
+global low_red_S
+global low_red_V
+global high_red_H
+global high_red_S
+global high
+=======
+>>>>>>> 1cd57bc533754d8fa2f165b7445469216b8f7559
 low_red_H = 160
 low_red_S = 150
 low_red_V = 0
@@ -36,6 +45,12 @@ class imageProcessing(DTROS):
         super(imageProcessing, self).__init__(node_name=node_name)
     	#self.image_pub = rospy.Publisher("ProcessedImage",CompressedImage,queue_size=1)
         self.led_pub = rospy.Publisher('LEDs', String, queue_size=1)
+<<<<<<< HEAD
+        self.wheel_pub = rospy.Publisher('/duckiebot3/wheels_driver_node/wheels_cmd', WheelsCmdStamped, queue_size=1)
+        self.car_pub = rospy.Publisher('/duckiebot3/wheels_driver_node/car_cmd', Twist2DStamped, queue_size=1)
+        self.line_detection_pub = rospy.Publisher('line_detection', String, queue_size=1)
+=======
+>>>>>>> 1cd57bc533754d8fa2f165b7445469216b8f7559
 
     	# construct publisher
         name="/duckiebot3/camera_node/image/compressed"
@@ -116,7 +131,11 @@ class imageProcessing(DTROS):
             self.move_wheel(2)
         else:
             self.move_wheel(1)
+<<<<<<< HEAD
+
+=======
             
+>>>>>>> 1cd57bc533754d8fa2f165b7445469216b8f7559
 
         if(not (Red_Flag or Yellow_Flag)):
             self.led_pub.publish('off')
@@ -232,7 +251,11 @@ def on_low_yel_V_thresh_trackbar(val):
     cv2.setTrackbarPos('Low Yellow Value', 'outputWindow', low_yel_V)
 
 
+<<<<<<< HEAD
+def on_high_yel_V_thresh_trackbar(val)line_detection_pub:
+=======
 def on_high_yel_V_thresh_trackbar(val):
+>>>>>>> 1cd57bc533754d8fa2f165b7445469216b8f7559
     global low_yel_V
     global high_yel_V
     high_yel_V = val
@@ -247,7 +270,11 @@ def move_wheel(self,flag):
         else:
             vel_left =  speed/3
             vel_right = speed
+<<<<<<< HEAD
+
+=======
       
+>>>>>>> 1cd57bc533754d8fa2f165b7445469216b8f7559
 
         msg = WheelsCmdStamped()
         msg.header.stamp = rospy.get_rostime()
@@ -264,4 +291,8 @@ if __name__ == '__main__':
     # create the node
     node = imageProcessing(node_name='Demo3')
     # keep spinning
+<<<<<<< HEAD
     rospy.spin()
+=======
+    rospy.spin()
+>>>>>>> 1cd57bc533754d8fa2f165b7445469216b8f7559
