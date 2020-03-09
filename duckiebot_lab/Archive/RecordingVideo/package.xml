@@ -1,0 +1,11 @@
+<package>
+	<name>recording</name>
+	<version>0.1.0</version>
+	<description>
+	Lane detection
+	</description>
+	<maintainer email="hkkrishna1@sheffield.ac.uk">Hemanth Krishna</maintainer>
+	<license>None</license>
+
+	<buildtool_depend>catkin</buildtool_depend>
+</package>

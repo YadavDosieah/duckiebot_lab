@@ -1,0 +1,11 @@
+<package>
+	<name>RED</name>
+	<version>0.1.0</version>
+	<description>
+	Code for ROS image capture
+	</description>
+	<maintainer email="rsharma10@sheffield.ac.uk">Ronak Sharma</maintainer>
+	<license>None</license>
+
+	<buildtool_depend>catkin</buildtool_depend>
+</package>

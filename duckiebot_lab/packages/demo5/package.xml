@@ -1,0 +1,11 @@
+<package>
+	<name>demo5</name>
+	<version>0.1.0</version>
+	<description>
+	Lap count and stop sign
+	</description>
+	<maintainer email="gydosieah1@sheffield.ac.uk">Yadav Dosieah</maintainer>
+	<license>None</license>
+
+	<buildtool_depend>catkin</buildtool_depend>
+</package>

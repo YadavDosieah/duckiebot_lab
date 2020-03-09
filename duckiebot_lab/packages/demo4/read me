@@ -1,0 +1,2 @@
+This file eliminates the surroundings of the lane and provides the edges of tha lane
+It provides information about the lines in the edges using HUgh line transformtion
